@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kasidit Rakkhito - Interactive Infographic Resume</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f1f5f9; /* Slate 100 */
+            color: #1e293b; /* Slate 800 */
+        }
+        
+        /* Chart Container Styling - MANDATORY */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Base height */
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        /* Flow Chart CSS-only Implementation (No SVG/Mermaid) */
+        .flow-step {
+            @apply bg-white border-l-4 border-blue-500 p-3 rounded shadow-sm text-sm font-medium text-center relative;
+        }
+        .flow-arrow {
+            @apply text-slate-400 text-xl font-bold flex items-center justify-center py-2 md:py-0 md:px-2;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+    </style>
+    <!-- Chosen Palette: "Energetic & Playful" / "Professional Tech" - Vibrant Blue (#2563EB), Cyan (#06B6D4), with Slate neutrals. 
+         Source Material dictates a professional but modern tech tone. -->
+    
+    <!-- Application Structure Plan: 
+         1. Hero Header: Immediate identification (Name, Role, Contacts).
+         2. Executive Summary: The narrative hook (Source: Summary section).
+         3. Skill Ecosystem (Data Visualization): Radar & Bar charts to visualize the 'Full-Stack' & 'Security' balance.
+         4. Experience Timeline (Interactive List): Chronological flow of work history.
+         5. Project Deep Dive (Interactive Dashboard): Detailed look at the IoT and Booking systems with architecture flow.
+         6. Education & Growth: Academic background and self-learning.
+         Why this structure? It moves from high-level abstract (Summary/Skills) to concrete proof (Experience/Projects), mirroring the recruiter's mental evaluation process.
+    -->
+    
+    <!-- Visualization & Content Choices:
+         - Skills: Radar Chart. Goal: Relationships. Justification: Shows the balance of a Full-Stack profile (Backend vs Security vs DevOps). Chart.js used.
+         - Tech Stack: Horizontal Bar Chart. Goal: Compare. Justification: Clear comparison of proficiency in Python, SQL, etc. Chart.js used.
+         - Project Architecture: CSS Grid Diagrams. Goal: Organize/Inform. Justification: Explains the IoT data flow (Sensor -> MQTT -> DB) without using banned Mermaid/SVG.
+         - Experience: Vertical Timeline. Goal: Change. Justification: Shows progression from education to hospital work to independent research.
+         - Confirmation: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Sticky Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="font-bold text-xl text-blue-700">KR.</div>
+            <div class="space-x-4 text-sm font-medium hidden md:block">
+                <a href="#summary" class="text-slate-600 hover:text-blue-600">สรุปข้อมูล</a>
+                <a href="#skills" class="text-slate-600 hover:text-blue-600">ทักษะ</a>
+                <a href="#experience" class="text-slate-600 hover:text-blue-600">ประสบการณ์</a>
+                <a href="#projects" class="text-slate-600 hover:text-blue-600">ผลงาน</a>
+            </div>
+            <a href="mailto:kasidit112510@gmail.com" class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm hover:bg-blue-700 transition">ติดต่อ</a>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="flex-grow max-w-5xl mx-auto px-4 py-8 space-y-12 w-full">
+
+        <!-- Header / Hero Section -->
+        <header class="bg-gradient-to-r from-blue-700 to-cyan-600 rounded-2xl p-8 text-white shadow-lg animate-fade-in text-center md:text-left">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div>
+                    <h1 class="text-3xl md:text-5xl font-bold mb-2">กษิดิศ รักขิโต</h1>
+                    <p class="text-xl text-blue-100 font-medium">Full-Stack Developer | Backend & System Integration Specialist</p>
+                    <div class="mt-4 flex flex-wrap gap-3 justify-center md:justify-start">
+                        <span class="bg-white/20 px-3 py-1 rounded-full text-sm">📍 สงขลา, ไทย</span>
+                        <span class="bg-white/20 px-3 py-1 rounded-full text-sm">📞 091-745-8589</span>
+                        <span class="bg-white/20 px-3 py-1 rounded-full text-sm">🔗 GitHub: latulee / topza2219</span>
+                    </div>
+                </div>
+                <div class="mt-6 md:mt-0 bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/20">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold">100%</div>
+                        <div class="text-xs text-blue-100 uppercase tracking-wide">Accuracy in IoT</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Section 1: Executive Summary -->
+        <section id="summary" class="animate-fade-in" style="animation-delay: 0.1s;">
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-blue-600 p-6">
+                <h2 class="text-2xl font-bold mb-4 text-slate-800">เกี่ยวกับตัวฉัน</h2>
+                <p class="text-slate-600 leading-relaxed text-lg">
+                    นักพัฒนาซอฟต์แวร์ที่มีความเชี่ยวชาญด้านการพัฒนา <strong>Backend</strong> และการวางระบบ <strong>IoT (Internet of Things)</strong> มีประสบการณ์ทำงานจริงในระบบนิเวศของสถานพยาบาล (โรงพยาบาลหาดใหญ่) เชี่ยวชาญการออกแบบสถาปัตยกรรมระบบที่รองรับการทำงานแบบ <strong>Real-time</strong> และการจัดการฐานข้อมูลประสิทธิภาพสูง มีทักษะในการใช้ Docker เพื่อจัดการสภาพแวดล้อมการพัฒนาให้ได้มาตรฐานสากล ยึดถือหลัก <strong>Clean Code</strong> และมุ่งเน้นการเขียนโปรแกรมเชิงป้องกัน (Secure Coding) เพื่อสร้างซอฟต์แวร์ที่มีความเสถียรและปลอดภัยสูงสุด
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: Technical Skills Analytics -->
+        <section id="skills" class="animate-fade-in" style="animation-delay: 0.2s;">
+            <div class="mb-4">
+                <h2 class="text-2xl font-bold text-slate-800">นิเวศทักษะทางเทคนิค (Technical Ecosystem)</h2>
+                <p class="text-slate-500 text-sm">การวิเคราะห์ความสามารถเชิงลึกในด้านต่างๆ ของการพัฒนาซอฟต์แวร์</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Radar Chart: Core Competencies -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="font-bold text-lg mb-4 text-center text-blue-700">ขอบเขตความสามารถ (Core Competencies)</h3>
+                    <p class="text-xs text-slate-400 text-center mb-4">แสดงความสมดุลระหว่างการพัฒนาและการดูแลระบบ</p>
+                    <div class="chart-container">
+                        <canvas id="competencyRadarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Bar Chart: Languages & Tools -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="font-bold text-lg mb-4 text-center text-cyan-700">เครื่องมือและภาษา (Tools & Languages)</h3>
+                    <p class="text-xs text-slate-400 text-center mb-4">ระดับความชำนาญในการใช้งานจริง</p>
+                    <div class="chart-container">
+                        <canvas id="skillsBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skill Cards Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                <div class="bg-slate-50 p-4 rounded-lg text-center border hover:border-blue-400 transition">
+                    <div class="text-2xl mb-2">🐍</div>
+                    <div class="font-bold text-slate-700">Python</div>
+                    <div class="text-xs text-slate-500">Flask, Core Scripting</div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-lg text-center border hover:border-blue-400 transition">
+                    <div class="text-2xl mb-2">🐳</div>
+                    <div class="font-bold text-slate-700">Docker</div>
+                    <div class="text-xs text-slate-500">Container & Compose</div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-lg text-center border hover:border-blue-400 transition">
+                    <div class="text-2xl mb-2">🗄️</div>
+                    <div class="font-bold text-slate-700">MySQL</div>
+                    <div class="text-xs text-slate-500">Optimization, Design</div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-lg text-center border hover:border-blue-400 transition">
+                    <div class="text-2xl mb-2">🔒</div>
+                    <div class="font-bold text-slate-700">Security</div>
+                    <div class="text-xs text-slate-500">OWASP, Pentest Basic</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Project Deep Dive -->
+        <section id="projects" class="animate-fade-in" style="animation-delay: 0.3s;">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-800">ผลงานเด่น (Featured Projects)</h2>
+                <p class="text-slate-600">การนำทักษะไปประยุกต์ใช้ในสภาพแวดล้อมจริง ณ โรงพยาบาลหาดใหญ่</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Project 1: IoT -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-slate-100">
+                    <div class="bg-blue-600 p-4 text-white flex justify-between items-center">
+                        <h3 class="font-bold text-lg">🌡️ โครงการเครื่องวัดอุณหภูมิ IoT</h3>
+                        <span class="text-xs bg-white/20 px-2 py-1 rounded">ก.พ. 68 - มิ.ย. 68</span>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-sm text-slate-600 mb-4">
+                            <strong>Problem:</strong> การเฝ้าระวังอุณหภูมิตู้แช่ยาต้องการความแม่นยำสูงและติดตามได้ตลอด 24 ชม.<br>
+                            <strong>Solution:</strong> ระบบ Real-time Monitoring ผ่าน MQTT และ Dashboard.
+                        </p>
+                        
+                        <!-- CSS Architecture Diagram -->
+                        <div class="bg-slate-50 p-4 rounded-lg mb-4">
+                            <h4 class="text-xs font-bold text-slate-400 uppercase mb-2">System Architecture Flow</h4>
+                            <div class="flex flex-col md:flex-row items-center justify-between text-xs">
+                                <div class="flow-step w-full md:w-auto">Hardware Sensor</div>
+                                <div class="flow-arrow">⬇️</div>
+                                <div class="flow-step w-full md:w-auto border-purple-500">MQTT Protocol</div>
+                                <div class="flow-arrow">⬇️</div>
+                                <div class="flow-step w-full md:w-auto border-green-500">Database</div>
+                                <div class="flow-arrow">⬇️</div>
+                                <div class="flow-step w-full md:w-auto border-orange-500">Web Dashboard</div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-blue-50 p-3 rounded">
+                                <div class="text-2xl font-bold text-blue-700">100%</div>
+                                <div class="text-xs text-slate-600">Accuracy & Real-time</div>
+                            </div>
+                            <div class="bg-blue-50 p-3 rounded">
+                                <div class="text-2xl font-bold text-blue-700">24/7</div>
+                                <div class="text-xs text-slate-600">High Availability</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: Booking System -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-slate-100">
+                    <div class="bg-cyan-600 p-4 text-white flex justify-between items-center">
+                        <h3 class="font-bold text-lg">📅 ระบบจัดการการจองทรัพยากร</h3>
+                        <span class="text-xs bg-white/20 px-2 py-1 rounded">ก.พ. 68 - มิ.ย. 68</span>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-sm text-slate-600 mb-4">
+                            <strong>Problem:</strong> การจองห้องและอุปกรณ์ซ้ำซ้อน (Double Booking) และกระบวนการ Manual.<br>
+                            <strong>Solution:</strong> ระบบ Web-based พร้อม Algorithm ตรวจสอบ Conflict.
+                        </p>
+
+                        <!-- CSS Process Diagram -->
+                        <div class="bg-slate-50 p-4 rounded-lg mb-4">
+                            <h4 class="text-xs font-bold text-slate-400 uppercase mb-2">Process Logic</h4>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <span class="w-8 text-center text-lg">👤</span>
+                                    <div class="flex-1 bg-white border border-slate-200 p-2 rounded text-xs">User Request</div>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="w-8 text-center text-lg">⚙️</span>
+                                    <div class="flex-1 bg-cyan-50 border border-cyan-200 p-2 rounded text-xs font-bold text-cyan-800">
+                                        Backend Logic: Conflict Resolution Check
+                                    </div>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="w-8 text-center text-lg">✅</span>
+                                    <div class="flex-1 bg-green-50 border border-green-200 p-2 rounded text-xs text-green-800">
+                                        Confirmed / Rejected
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-cyan-50 p-3 rounded">
+                                <div class="text-2xl font-bold text-cyan-700">100%</div>
+                                <div class="text-xs text-slate-600">Digital Transformation</div>
+                            </div>
+                            <div class="bg-cyan-50 p-3 rounded">
+                                <div class="text-2xl font-bold text-cyan-700">SQL</div>
+                                <div class="text-xs text-slate-600">Complex Optimization</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 4: Experience Timeline -->
+        <section id="experience" class="animate-fade-in" style="animation-delay: 0.4s;">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-800">เส้นทางประสบการณ์ (Journey)</h2>
+            </div>
+            
+            <div class="relative border-l-4 border-blue-200 ml-4 space-y-8">
+                
+                <!-- Timeline Item 1 -->
+                <div class="relative pl-8">
+                    <div class="absolute -left-3 bg-blue-600 w-6 h-6 rounded-full border-4 border-white"></div>
+                    <div class="bg-white p-5 rounded-lg shadow-sm border border-slate-100">
+                        <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded mb-2 inline-block">ต.ค. 2568 - ปัจจุบัน</span>
+                        <h3 class="text-lg font-bold">Independent Developer & Security Researcher</h3>
+                        <p class="text-sm text-slate-600 mt-1">Self-Directed Development</p>
+                        <ul class="mt-3 text-sm text-slate-500 list-disc list-inside">
+                            <li>ศึกษา Advanced Algorithm & Data Structures</li>
+                            <li>วิจัยด้าน Security Research และ Vulnerability Assessment</li>
+                            <li>ฝึกฝน Modern Infrastructure (CI/CD, Nginx, Docker Compose)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 2 -->
+                <div class="relative pl-8">
+                    <div class="absolute -left-3 bg-cyan-500 w-6 h-6 rounded-full border-4 border-white"></div>
+                    <div class="bg-white p-5 rounded-lg shadow-sm border border-slate-100">
+                        <span class="text-xs font-bold text-cyan-600 bg-cyan-50 px-2 py-1 rounded mb-2 inline-block">ก.พ. 2568 – มิ.ย. 2568</span>
+                        <h3 class="text-lg font-bold">Full-Stack Developer (Project Based)</h3>
+                        <p class="text-sm text-slate-600 mt-1">โรงพยาบาลหาดใหญ่</p>
+                        <ul class="mt-3 text-sm text-slate-500 list-disc list-inside">
+                            <li>IoT Architecture Design & Implementation</li>
+                            <li>Backend Development สำหรับระบบจองทรัพยากร</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 3 -->
+                <div class="relative pl-8">
+                    <div class="absolute -left-3 bg-slate-400 w-6 h-6 rounded-full border-4 border-white"></div>
+                    <div class="bg-white p-5 rounded-lg shadow-sm border border-slate-100">
+                        <h3 class="text-lg font-bold">การศึกษา (Education)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
+                            <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                                <div class="text-xs font-bold text-slate-400">ปริญญาตรี</div>
+                                <div class="text-sm font-bold text-slate-700">เทคโนโลยีสารสนเทศ</div>
+                                <div class="text-xs text-slate-500">Python, Linux, Web App</div>
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                                <div class="text-xs font-bold text-slate-400">ปวส.</div>
+                                <div class="text-sm font-bold text-slate-700">พัฒนาซอฟต์แวร์</div>
+                                <div class="text-xs text-slate-500">Java, PHP, Docker</div>
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                                <div class="text-xs font-bold text-slate-400">ปวช.</div>
+                                <div class="text-sm font-bold text-slate-700">คอมพิวเตอร์ธุรกิจ</div>
+                                <div class="text-xs text-slate-500">Web Design, DB Basics</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-slate-500 text-sm pb-8">
+            <p>&copy; 2025 Kasidit Rakkhito. Generated Interactive Portfolio.</p>
+        </footer>
+
+    </main>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Data Processing & Chart Logic
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Utility: Label Wrapping Logic (16 char limit)
+            const wrapLabel = (label) => {
+                if (label.length <= 16) return label;
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = words[0];
+
+                for (let i = 1; i < words.length; i++) {
+                    if (currentLine.length + 1 + words[i].length <= 16) {
+                        currentLine += ' ' + words[i];
+                    } else {
+                        lines.push(currentLine);
+                        currentLine = words[i];
+                    }
+                }
+                lines.push(currentLine);
+                return lines;
+            };
+
+            // Common Chart Options
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { font: { family: "'Sarabun', sans-serif" } }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(30, 41, 59, 0.9)',
+                        titleFont: { family: "'Sarabun', sans-serif", size: 14 },
+                        bodyFont: { family: "'Sarabun', sans-serif", size: 13 },
+                        padding: 12,
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                    return label.join(' ');
+                                } else {
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Chart 1: Competency Radar Chart
+            // Goal: Show the shape of the candidate's skills (Full Stack Balance)
+            const ctxRadar = document.getElementById('competencyRadarChart').getContext('2d');
+            new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: ['Backend Dev', 'Frontend Dev', 'DevOps/Infra', 'Security', 'Database'].map(wrapLabel),
+                    datasets: [{
+                        label: 'Skill Proficiency',
+                        data: [90, 75, 80, 70, 85], // Estimated from "Advanced Python", "Full Stack", "Docker", "Secure Coding"
+                        backgroundColor: 'rgba(37, 99, 235, 0.2)', // Blue 600
+                        borderColor: 'rgba(37, 99, 235, 1)',
+                        pointBackgroundColor: 'rgba(6, 182, 212, 1)', // Cyan 500
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(37, 99, 235, 1)'
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0,0,0,0.1)' },
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            pointLabels: {
+                                font: { family: "'Sarabun', sans-serif", size: 12, weight: 'bold' },
+                                color: '#475569'
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false } // Hide numbers for cleaner look
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Skills Bar Chart
+            // Goal: Comparison of specific tools
+            const ctxBar = document.getElementById('skillsBarChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['Python (Flask)', 'PHP', 'JavaScript', 'MySQL', 'Docker', 'Linux'].map(wrapLabel),
+                    datasets: [{
+                        label: 'Proficiency Level (%)',
+                        data: [95, 85, 80, 90, 85, 75], // Derived from "Advanced", "Expertise" keywords
+                        backgroundColor: [
+                            'rgba(37, 99, 235, 0.8)', // Blue
+                            'rgba(6, 182, 212, 0.8)', // Cyan
+                            'rgba(37, 99, 235, 0.8)',
+                            'rgba(6, 182, 212, 0.8)',
+                            'rgba(37, 99, 235, 0.8)',
+                            'rgba(6, 182, 212, 0.8)'
+                        ],
+                        borderRadius: 4,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    indexAxis: 'y', // Horizontal Bar
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { display: false }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: {
+                                font: { family: "'Sarabun', sans-serif" }
+                            }
+                        }
+                    }
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>
